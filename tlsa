@@ -25,6 +25,7 @@
 
 VERSION="3.0"
 
+import base64
 import sys
 import os
 import socket
@@ -110,6 +111,9 @@ def genRecords(hostname, protocol, port, chain, output='rfc', usage=1, selector=
 			print(genTLSA(hostname, protocol, port, cert, 'rfc', usage, selector, mtype))
 		else:
 			print(genTLSA(hostname, protocol, port, cert, output, usage, selector, mtype))
+
+		CDNSKEY = base64.b64encode(cert.get_pubkey().as_der()).decode('ascii')
+		print('%s IN CDNSKEY 0 3 225 %s'%(hostname, CDNSKEY))
 
 	# Clear the cert from memory (to stop M2Crypto from segfaulting)
 	cert=None
